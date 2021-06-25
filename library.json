@@ -1,0 +1,22 @@
+{
+    "name": "Buttons.pvn",
+    "version": "0.1.0",
+    "keywords": "buttons, keys",
+    "description": "Library for buttons",
+    "repository":
+    {
+      "type": "git",
+      "url": "https://github.com/PavelVN/buttons_pvn"
+    },
+    "authors": [
+      {
+        "name": "Pavel Nefedev",
+        "url": "https://nefedev.com/",
+        "maintainer": true,
+        "email": "pavel@nefedev.com"
+      }
+    ],
+    "exclude": [".github", "extras", "docs"],
+    "frameworks": "arduino",
+    "platforms": ["*"]
+  }
