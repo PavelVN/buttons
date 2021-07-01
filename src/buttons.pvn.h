@@ -2,7 +2,6 @@
 #define BUTTONS_PVN_H
 
 #include <Arduino.h>
-#include <Adafruit_NeoPixel.h>
 
 class buttons_pvn
 {
@@ -22,7 +21,7 @@ public:
   buttons_pvn();
   ~buttons_pvn();
   void init(const uint8_t buttonsCount, const uint8_t *PIN);
-  bool loop(const uint32_t millisLoop);
+  int loop(const uint32_t millisLoop);
   bool isShortPress(uint8_t buttonNum);
   bool isLongPress(uint8_t buttonNum);
   uint8_t reset();
@@ -77,13 +76,12 @@ buttons_pvn::~buttons_pvn()
   buttonsCount = 0;
 }
 
-bool buttons_pvn::loop(const uint32_t millisLoop)
+int buttons_pvn::loop(const uint32_t millisLoop)
 {
   if (millisLoop - lastRunMillis > READ_DELAY)
   {
     lastRunMillis = millisLoop;
-    bool ans;
-    ans = false;
+    int ans{0};
     for (uint8_t i = 0; i < buttonsCount; i++)
     {
       state[i] = digitalRead(PIN[i]);
@@ -96,7 +94,7 @@ bool buttons_pvn::loop(const uint32_t millisLoop)
         if (time[i] == longPressCount)
         {
           longPress[i] = true;
-          ans = true;
+          ++ans;
         }
       }
       else if (time[i] > 0)
@@ -104,14 +102,14 @@ bool buttons_pvn::loop(const uint32_t millisLoop)
         if (time[i] > 1  && time[i] < longPressCount)
         {
           shortPress[i] = true;
-          ans = true;
+          ++ans;
         }
         time[i] = 0;
       }
     }
     return ans;
   }
-  return false;
+  return 0;
 }
 
 bool buttons_pvn::isShortPress(uint8_t buttonNum)
@@ -141,8 +139,6 @@ uint8_t buttons_pvn::reset()
 {
   uint8_t ans;
   ans = 0;
-  Serial.println("Short: " + String(shortPress[0]) + String(shortPress[1]) + String(shortPress[2]) + String(shortPress[3]));
-  Serial.println("Long: " + String(longPress[0]) + String(longPress[1]) + String(longPress[2]) + String(longPress[3]));
   for (uint8_t i = 0; i < buttonsCount; i++)
   {
     if (shortPress[i])
