@@ -4,9 +4,10 @@ buttons_pvn::buttons_pvn()
 {
 }
 #ifdef ESP32
-void buttons_pvn::init(const uint8_t buttonsCount, const uint8_t *PIN, uint8_t esp32touch) : buttons_pvn::init(const uint8_t buttonsCount, const uint8_t *PIN)
+void buttons_pvn::init(const uint8_t buttonsCount, const uint8_t *PIN, uint8_t esp32touch)
 {
-  esp32touch = (uint8_t *)malloc(buttonsCount);
+  init(buttonsCount, PIN);
+  this->esp32touch = (uint8_t *)malloc(buttonsCount);
   for (uint8_t i = 0; i < buttonsCount; i++)
   {
     this->esp32touch[i] = esp32touch;
