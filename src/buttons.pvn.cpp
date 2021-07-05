@@ -3,7 +3,16 @@
 buttons_pvn::buttons_pvn()
 {
 }
-
+#ifdef ESP32
+void buttons_pvn::init(const uint8_t buttonsCount, const uint8_t *PIN, uint8_t esp32touch) : buttons_pvn::init(const uint8_t buttonsCount, const uint8_t *PIN)
+{
+  esp32touch = (uint8_t *)malloc(buttonsCount);
+  for (uint8_t i = 0; i < buttonsCount; i++)
+  {
+    this->esp32touch[i] = esp32touch;
+  }
+}
+#endif
 void buttons_pvn::init(const uint8_t buttonsCount, const uint8_t *PIN)
 {
   this->buttonsCount = buttonsCount;
@@ -16,14 +25,13 @@ void buttons_pvn::init(const uint8_t buttonsCount, const uint8_t *PIN)
   if (PIN == nullptr || state == nullptr || onState == nullptr || time == nullptr || shortPress == nullptr || longPress == nullptr)
   {
     Serial.println("Error memory");
-    while(1)
+    while (1)
     {
       delay(1000);
       Serial.print(".");
     }
-
   }
-  
+
   for (uint8_t i = 0; i < buttonsCount; i++)
   {
     this->PIN[i] = PIN[i];
@@ -57,7 +65,25 @@ int buttons_pvn::loop(const uint32_t millisLoop)
     int ans{0};
     for (uint8_t i = 0; i < buttonsCount; i++)
     {
+#ifdef ESP32
+      if (esp32touch[i])
+      {
+        if (touchRead(PIN[i]) < esp32touch[i])
+        {
+          state[i] = 1;
+        }
+        else
+        {
+          state[i] = 0;
+        }
+      }
+      else
+      {
+        state[i] = digitalRead(PIN[i]);
+      }
+#else
       state[i] = digitalRead(PIN[i]);
+#endif
     }
     for (uint8_t i = 0; i < buttonsCount; i++)
     {
@@ -72,7 +98,7 @@ int buttons_pvn::loop(const uint32_t millisLoop)
       }
       else if (time[i] > 0)
       {
-        if (time[i] > 1  && time[i] < longPressCount)
+        if (time[i] > 1 && time[i] < longPressCount)
         {
           shortPress[i] = true;
           ++ans;

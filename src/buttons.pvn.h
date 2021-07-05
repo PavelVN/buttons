@@ -12,6 +12,9 @@ private:
   bool *onState;
   bool *longPress;
   bool *shortPress;
+  #ifdef ESP32
+  uint8_t *esp32touch;
+  #endif
   uint16_t *time;
   uint32_t READ_DELAY;
   uint16_t longPressCount;
@@ -21,6 +24,14 @@ public:
   buttons_pvn();
   ~buttons_pvn();
   void init(const uint8_t buttonsCount, const uint8_t *PIN);
+  #ifdef ESP32
+  /**
+  init esp32touch buttons with sensetivitey esp32touch
+  @param esp32touch - sesetivity
+  @return 
+  */
+  void init(const uint8_t buttonsCount, const uint8_t *PIN, uint8_t esp32touch);
+  #endif
   int loop(const uint32_t millisLoop);
   bool isShortPress(uint8_t buttonNum);
   bool isLongPress(uint8_t buttonNum);
