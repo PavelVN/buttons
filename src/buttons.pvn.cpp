@@ -7,7 +7,6 @@ buttons_pvn::buttons_pvn()
 void buttons_pvn::init(const uint8_t buttonsCount, const uint8_t *PIN, uint8_t esp32touch)
 {
   init(buttonsCount, PIN);
-  this->esp32touch = (uint8_t *)malloc(buttonsCount);
   for (uint8_t i = 0; i < buttonsCount; i++)
   {
     this->esp32touch[i] = esp32touch;
@@ -16,6 +15,7 @@ void buttons_pvn::init(const uint8_t buttonsCount, const uint8_t *PIN, uint8_t e
 #endif
 void buttons_pvn::init(const uint8_t buttonsCount, const uint8_t *PIN)
 {
+  
   this->buttonsCount = buttonsCount;
   this->PIN = (uint8_t *)malloc(buttonsCount);
   state = (bool *)malloc(buttonsCount);
@@ -23,6 +23,9 @@ void buttons_pvn::init(const uint8_t buttonsCount, const uint8_t *PIN)
   time = (uint16_t *)malloc(2 * buttonsCount);
   shortPress = (bool *)malloc(buttonsCount);
   longPress = (bool *)malloc(buttonsCount);
+#ifdef ESP32
+  esp32touch = (uint8_t *)malloc(buttonsCount);
+#endif
   if (PIN == nullptr || state == nullptr || onState == nullptr || time == nullptr || shortPress == nullptr || longPress == nullptr)
   {
     Serial.println("Error memory");
@@ -42,6 +45,9 @@ void buttons_pvn::init(const uint8_t buttonsCount, const uint8_t *PIN)
     time[i] = 0;
     longPress[i] = 0;
     shortPress[i] = 0;
+#ifdef ESP32
+    esp32touch[i] = 0;
+#endif
   }
   READ_DELAY = 50;
   longPressCount = 15;
