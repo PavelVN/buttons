@@ -1,6 +1,6 @@
 {
-    "name": "buttons.pvn",
-    "version": "0.1.0",
+    "name": "buttons_pvn",
+    "version": "0.1.1",
     "keywords": "buttons, keys",
     "description": "Library for buttons",
     "repository":
